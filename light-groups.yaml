@@ -10,6 +10,7 @@
       - light.living_room_couch_lamp
       - light.bedroom_light
       - light.playroom_floor_lamp_2
+  # also a test comment!
 
   - platform: group
     name: First Floor Lights

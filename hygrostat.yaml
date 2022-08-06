@@ -15,6 +15,7 @@
     away_humidity: 35
     away_fixed: True
     sensor_stale_duration: 00:15:00
+  # test comment for learning
 
   - name: logan-hygrostat
     humidifier: switch.logans_ht_2
