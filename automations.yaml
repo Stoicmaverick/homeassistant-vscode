@@ -65,6 +65,7 @@
                   - cover.left_garage_door
       default: []
   mode: single
+  # comment only for testing git push
 - id: "1631851260295"
   alias: Jarvis Wake up
   description: ""
