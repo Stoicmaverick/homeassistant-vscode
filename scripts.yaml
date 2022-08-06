@@ -1,0 +1,61 @@
+jarvis_greeting:
+  alias: Jarvis Greeting
+  sequence:
+  - service: media_player.volume_set
+    data:
+      volume_level: 0.6
+    target:
+      entity_id: media_player.bedroom_speaker
+  - scene: scene.all_lights_on
+  - service: tts.cloud_say
+    data_template:
+      entity_id: media_player.bedroom_speaker
+      message: Good {% if now().strftime("%H")|int < 12 %} morning. {% elif now().strftime("%H")|int
+        < 18 %} afternoon. {% else %} evening. {% endif %}It is currently {{now().strftime("%A")}},
+        {{now().strftime("%B")}} {{now().strftime("%-d")}}. Right now, it's {{states('sensor.openweathermap_feels_like_temperature')|int}}
+        degrees out, and {{states('sensor.openweathermap_condition')}} with {{states('sensor.openweathermap_humidity')}}%
+        humidity. Today will have {{states('weather.openweathermap_forcast')}} skyes,
+        and reach {{states('sensor.openweathermap_forecast_temperature')|round}} degrees
+        by the afternoon. {% if now().strftime("%w")|int == 1 %} Don't forget the
+        trash goes out tonight. {% endif %}{% if now().strftime("%w")|int == 2 %}
+        Don't forget to bring the trash in today. {% endif %}  Good luck everybody.
+  mode: single
+pause_pi_hole_for_60_minutes:
+  alias: Pause Pi-Hole for 60 minutes
+  sequence:
+  - type: turn_off
+    device_id: e9c9e2702e90475bc6de111850cf9339
+    entity_id: switch.pi_hole
+    domain: switch
+  - wait_template: ''
+    timeout: 01:00:00
+    continue_on_timeout: true
+  - type: turn_on
+    device_id: e9c9e2702e90475bc6de111850cf9339
+    entity_id: switch.pi_hole
+    domain: switch
+  mode: restart
+  icon: hass:pi-hole
+jarvis_greeting_weekend:
+  alias: Jarvis Greeting Weekend
+  sequence:
+  - service: media_player.volume_set
+    data:
+      volume_level: 0.6
+    target:
+      entity_id: media_player.bedroom_speaker
+  - service: tts.cloud_say
+    data_template:
+      entity_id: media_player.bedroom_speaker
+      message: GOOD MORNING commanders! It is currently {{states('sensor.openweathermap_feels_like_temperature')|int}}
+        degrees out, and {{states('sensor.openweathermap_condition')}} with {{states('sensor.openweathermap_humidity')}}%
+        humidity. Today will have {{states('weather.openweathermap_forcast')}} skyes,
+        and reach {{states('sensor.openweathermap_forecast_temperature')|round}} degrees
+        by the afternoon. Have a good day Commander.
+  mode: single
+  
+# calculate_total_lifetime_volume_of_rodi_filter:
+# - event: MY_EVENT
+#   event_data:
+#     name: add flow numbers
+#     customData: "{{(states('input_number.rodi_lifetime_volume') | int) + (states('sensor.total_flow') | int)}}"

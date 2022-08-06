@@ -1,0 +1,404 @@
+- id: "1631674517384"
+  alias: Kids Rooms Environmentals
+  description: ""
+  trigger:
+    - platform: time
+      at: 08:00
+      id: heaters.off
+    - platform: time
+      at: "18:00"
+      id: heaters.on
+  condition: []
+  action:
+    - choose:
+        - conditions:
+            - condition: trigger
+              id: heaters.on
+          sequence:
+            - scene: scene.nap_ttime
+        - conditions:
+            - condition: trigger
+              id: heaters.off
+          sequence:
+            - scene: scene.up_time
+      default: []
+  mode: single
+- id: "1631674743058"
+  alias: Grarage Doors open for Chris
+  description: ""
+  trigger:
+    - platform: zone
+      entity_id: person.chris
+      zone: zone.home
+      event: leave
+      id: chris.leaves
+    - platform: zone
+      entity_id: person.chris
+      zone: zone.home
+      event: enter
+      id: chris.home
+  condition:
+    - condition: sun
+      before: sunset
+      after: sunrise
+  action:
+    - choose:
+        - conditions:
+            - condition: trigger
+              id: chris.home
+          sequence:
+            - service: cover.open_cover
+              data: {}
+              target:
+                entity_id:
+                  - cover.left_garage_door
+                  - cover.right_garage_door
+        - conditions:
+            - condition: trigger
+              id: chris.leaves
+          sequence:
+            - service: cover.close_cover
+              data: {}
+              target:
+                entity_id:
+                  - cover.right_garage_door
+                  - cover.left_garage_door
+      default: []
+  mode: single
+- id: "1631851260295"
+  alias: Jarvis Wake up
+  description: ""
+  trigger:
+    - platform: time
+      at: 06:31
+    - platform: device
+      type: turned_on
+      device_id: 772e83811ee65134105a63ca8d5a946b
+      entity_id: light.bedroom_lights
+      domain: light
+      for:
+        hours: 0
+        minutes: 0
+        seconds: 3
+        milliseconds: 0
+  condition:
+    - condition: state
+      entity_id: binary_sensor.workday_sensor
+      state: "on"
+    - condition: time
+      after: 05:00
+      before: 08:00
+      weekday:
+        - mon
+        - tue
+        - wed
+        - thu
+        - fri
+    - condition: state
+      entity_id: input_boolean.woken_up
+      state: "off"
+  action:
+    - service: light.turn_on
+      data:
+        brightness: 255
+        brightness_pct: 100
+      target:
+        area_id:
+          - bedroom
+          - kitchen
+          - living_room
+    - service: script.jarvis_greeting
+    - type: turn_off
+      device_id: d2c19fb92524684a93f17b3cb116301d
+      entity_id: light.logan_nightlight
+      domain: light
+    - service: input_boolean.turn_on
+      target:
+        entity_id: input_boolean.woken_up
+  mode: single
+- id: "1631939080608"
+  alias: Jarvis Weekend Wakeup
+  description: ""
+  trigger:
+    - platform: device
+      type: turned_on
+      device_id: 772e83811ee65134105a63ca8d5a946b
+      entity_id: light.bedroom_lights
+      domain: light
+  condition:
+    - condition: time
+      after: 06:00
+      weekday:
+        - mon
+        - tue
+        - wed
+        - thu
+        - fri
+        - sat
+        - sun
+      before: 08:00
+    - condition: state
+      entity_id: binary_sensor.workday_sensor
+      state: "off"
+    - condition: state
+      entity_id: input_boolean.woken_up
+      state: "off"
+  action:
+    - service: script.jarvis_greeting
+    - service: input_boolean.turn_on
+      target:
+        entity_id: input_boolean.woken_up
+  mode: single
+- id: "1631982094541"
+  alias: Basement Lights tie to switch
+  description: Controls all basement lights with main switch
+  trigger:
+    - platform: device
+      type: turned_off
+      device_id: e97f387f6cd8bebf5065d525c9d19d5d
+      entity_id: light.basement_ceiling_lights
+      domain: light
+      id: basement.lights.off
+    - platform: device
+      type: turned_on
+      device_id: e97f387f6cd8bebf5065d525c9d19d5d
+      entity_id: light.basement_ceiling_lights
+      domain: light
+      id: basement.lights.on
+  condition: []
+  action:
+    - choose:
+        - conditions:
+            - condition: trigger
+              id: basement.lights.on
+          sequence:
+            - service: light.turn_on
+              data: {}
+              target:
+                area_id: basement
+            - delay:
+                hours: 0
+                minutes: 0
+                seconds: 10
+                milliseconds: 0
+            - type: turn_on
+              device_id: 2a7301821af073c04acfd15b7c52a077
+              entity_id: light.tv_overhead_light
+              domain: light
+        - conditions:
+            - condition: trigger
+              id: basement.lights.off
+          sequence:
+            - service: light.turn_off
+              data: {}
+              target:
+                area_id: basement
+      default: []
+  mode: single
+- id: "1632243228116"
+  alias: Reset 'Woken up' sensor
+  description: ""
+  trigger:
+    - platform: time
+      at: "11:00"
+  condition: []
+  action:
+    - service: input_boolean.turn_off
+      target:
+        entity_id: input_boolean.woken_up
+  mode: single
+- id: "1632244875897"
+  alias: Air Compressor Timeout
+  description: ""
+  trigger:
+    - platform: time
+      at: "20:00"
+      id: 9pm
+  condition: []
+  action:
+    - choose:
+        - conditions:
+            - condition: trigger
+              id: 9pm
+          sequence:
+            - type: turn_off
+              device_id: 5fd23dfbf46f009aa2bbf17364093915
+              entity_id: switch.air_compressor
+              domain: switch
+      default: []
+  mode: single
+- id: "1634138025139"
+  alias: Water Heater off at night
+  description: Turns the water heater off at night, and back on in the morning
+  trigger:
+    - platform: time
+      at: "22:00"
+      id: water.heater.off
+    - platform: time
+      at: 05:00
+      id: water.heater.on
+  condition: []
+  action:
+    - choose:
+        - conditions:
+            - condition: trigger
+              id: water.heater.on
+          sequence:
+            - type: turn_on
+              device_id: 389c0259e4e5d2741b718868f7d5323a
+              entity_id: switch.water_heater_2
+              domain: switch
+        - conditions:
+            - condition: trigger
+              id: water.heater.off
+          sequence:
+            - type: turn_off
+              device_id: 389c0259e4e5d2741b718868f7d5323a
+              entity_id: switch.water_heater_2
+              domain: switch
+      default: []
+  mode: single
+- id: "1641611437794"
+  alias: Logan's room switch box
+  description: ""
+  trigger:
+    - type: turned_on
+      platform: device
+      device_id: 8bc0695403c95eef481473a7df80385d
+      entity_id: binary_sensor.logan_room_light
+      domain: binary_sensor
+      id: logan.light.button
+    - type: turned_on
+      platform: device
+      device_id: 8bc0695403c95eef481473a7df80385d
+      entity_id: binary_sensor.logan_room_nightlight
+      domain: binary_sensor
+      id: logan.nightlight.button
+  condition:
+    - condition: time
+      after: 06:00
+      before: "18:00"
+  action:
+    - choose:
+        - conditions:
+            - condition: trigger
+              id: logan.light.button
+          sequence:
+            - type: toggle
+              device_id: a41aedcaa4d46ce0b5604666fad27392
+              entity_id: switch.logan_s_room_light
+              domain: switch
+        - conditions:
+            - condition: trigger
+              id: logan.nightlight.button
+          sequence:
+            - type: toggle
+              device_id: d2c19fb92524684a93f17b3cb116301d
+              entity_id: light.logan_nightlight
+              domain: light
+      default: []
+  mode: single
+- id: "1649738563169"
+  alias: Night time all off
+  description: ""
+  trigger:
+    - platform: state
+      entity_id: sensor.z_fold_3_charger_type
+      to: wireless
+      for:
+        hours: 0
+        minutes: 0
+        seconds: 2
+  condition:
+    - condition: time
+      after: "23:00:00"
+      before: 05:00:00
+      weekday:
+        - sun
+        - sat
+        - fri
+        - thu
+        - wed
+        - tue
+        - mon
+  action:
+    - service: light.turn_off
+      data: {}
+      target:
+        area_id:
+          - basement
+          - bedroom
+          - kitchen
+          - living_room
+          - playroom
+    - service: cover.close_cover
+      data: {}
+      target:
+        device_id:
+          - 39f8643e36256ebcff3d66bc30426862
+          - 99f0de0393edc29b6558623cadd8f70f
+  mode: single
+- id: "1650745527619"
+  alias: Luke room safety cutout
+  description: ""
+  trigger:
+    - platform: state
+      entity_id: humidifier.luke_hygrostat
+      to: unavailable
+      for:
+        hours: 0
+        minutes: 5
+        seconds: 0
+  condition: []
+  action:
+    - type: turn_off
+      device_id: 71eaa02459a8866cebb82ec94c9ad726
+      entity_id: switch.lukes_humidifier
+      domain: switch
+    - type: turn_off
+      device_id: 18618b964eea6109fa545b5e59bf6f5f
+      entity_id: switch.lukes_room_heater_plug
+      domain: switch
+  mode: single
+- id: "1652902989063"
+  alias: Basement TV overhead light off
+  description: ""
+  trigger:
+    - platform: device
+      device_id: a165ba6969ac74edc9d04b8808ed6a54
+      domain: media_player
+      entity_id: media_player.basement_lg_tv
+      type: turned_on
+      id: tv on
+    - platform: device
+      device_id: a165ba6969ac74edc9d04b8808ed6a54
+      domain: media_player
+      entity_id: media_player.basement_lg_tv
+      type: turned_off
+      id: tv off
+  condition:
+    - condition: device
+      type: is_on
+      device_id: e97f387f6cd8bebf5065d525c9d19d5d
+      entity_id: light.basement_ceiling_lights
+      domain: light
+  action:
+    - choose:
+        - conditions:
+            - condition: trigger
+              id: tv on
+          sequence:
+            - type: turn_off
+              device_id: 2a7301821af073c04acfd15b7c52a077
+              entity_id: light.tv_overhead_light
+              domain: light
+        - conditions:
+            - condition: trigger
+              id: tv off
+          sequence:
+            - type: turn_on
+              device_id: 2a7301821af073c04acfd15b7c52a077
+              entity_id: light.tv_overhead_light
+              domain: light
+      default: []
+  mode: single

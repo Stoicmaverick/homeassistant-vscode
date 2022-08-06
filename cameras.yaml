@@ -1,0 +1,24 @@
+- platform: generic
+  name: Luke's Crib
+  still_image_url: http://192.168.1.220/snap.jpeg
+  stream_source: rtsp://192.168.1.1:7447/TaNHHYnIAKFiZLmO
+
+- platform: generic
+  name: Logan's Room
+  still_image_url: http://192.168.1.231/snap.jpeg
+  stream_source: rtsp://192.168.1.1:7447/VwkpFXLkA845UDM2
+
+- platform: generic
+  name: Front Door Camera
+  still_image_url: http://192.168.1.55/snap.jpeg
+  stream_source: rtsp://192.168.1.1:7447/ctg6k9MJFRRJsI7K
+
+- platform: generic
+  name: Deck Camera
+  still_image_url: http://192.168.1.50/snap.jpeg
+  stream_source: rtsp://192.168.1.1:7447/q0tXsMiCprxzsOG6
+
+- platform: generic
+  name: Driveway Camera
+  still_image_url: http://192.168.1.110/snap.jpeg
+  stream_source: rtsp://192.168.1.1:7447/TO9OFadbUnxzojLu

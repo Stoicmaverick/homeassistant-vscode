@@ -1,0 +1,37 @@
+  - platform: generic_thermostat
+    name: lukes-thermostat
+    unique_id: 4556874493288463
+    heater: switch.lukes_room_heater_plug
+    target_sensor: sensor.luke_env_si7021_temperature
+    min_temp: 60
+    max_temp: 80
+    ac_mode: false
+    target_temp: 71
+    cold_tolerance: 1
+    hot_tolerance: 0.5
+    min_cycle_duration:
+      seconds: 5
+    keep_alive:
+      minutes: 3
+    initial_hvac_mode: "heat"
+    away_temp: 65
+    precision: 1
+
+  - platform: generic_thermostat
+    name: logans-thermostat
+    unique_id: 4556874493288423
+    heater: switch.logans_heater_plug
+    target_sensor: sensor.logans_ht_si7021_temperature_2
+    min_temp: 60
+    max_temp: 80
+    ac_mode: false
+    target_temp: 71
+    cold_tolerance: 1
+    hot_tolerance: 0.5
+    min_cycle_duration:
+      seconds: 5
+    keep_alive:
+      minutes: 3
+    initial_hvac_mode: "heat"
+    away_temp: 65
+    precision: 1

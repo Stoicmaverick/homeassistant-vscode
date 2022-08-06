@@ -1,0 +1,77 @@
+# Configure a default setup of Home Assistant (frontend, api, etc)
+default_config:
+stream:
+mobile_app:
+history:
+http:
+  use_x_forwarded_for: true
+  trusted_proxies:
+    - 172.30.33.0/24
+    - 192.168.1.0/24
+  cors_allowed_origins:
+    - https://cast.home-assistant.io
+
+# Text to speech
+tts:
+  - platform: picotts
+binary_sensor:
+  - platform: workday
+    country: US
+    workdays: [mon, tue, wed, thu, fri]
+    excludes: [sat, sun, holiday]
+    remove_holidays:
+      - "Thanksgiving"
+      - "Christmas Day"
+      - "Christmas Eve"
+
+spotify:
+  client_id: 405d0172bd494f6b970e2fa23b40e930
+  client_secret: 2706c1c757ba4ca49585263a89bde974
+
+group: !include groups.yaml
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+climate: !include climate.yaml
+generic_hygrostat: !include hygrostat.yaml
+light: !include light-groups.yaml
+camera: !include cameras.yaml
+# sensors: !include sensors.yaml
+homeassistant:
+  customize: !include customize.yaml
+recorder:
+#   db_url: mysql://homeassistant:Minnow12@core-mariadb/homeassistant?charset=utf8mb4
+ffmpeg:
+frontend:
+  themes: !include_dir_merge_named themes
+# influxdb:
+#   host: a0d7b954-influxdb
+#   port: 8086
+#   database: homeassistant
+#   username: chris
+#   password: Minnow12
+#   max_retries: 3
+#   default_measurement: state
+
+sensor:
+  - platform: time_date
+    display_options:
+      - "time"
+      - "date"
+      - "date_time"
+      - "date_time_utc"
+      - "date_time_iso"
+      - "time_date"
+      - "time_utc"
+      - "beat"
+#   - platform: template
+#     sensors:
+#       lifetime_flow:
+#         friendly_name: "Lifetime Flow"
+#         unit_of_measurment: "mL"
+#         state_class: total_increasing
+#         state: {{states('sensor.lifetime_flow')}}
+# {{states('sensor.total_flow') + states('input_number.rodi_lifetime_volume')}}
+# resources:
+#   - url: /local/mini-humidifier-bundle.js?v=2.5.4
+#     type: module

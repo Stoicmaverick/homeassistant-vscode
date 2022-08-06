@@ -1,0 +1,27 @@
+  - platform: group
+    name: All Lights
+    entities:
+      - light.basement_couch_lamp
+      - light.basement_square_lamp_ht
+      - light.basement_ceiling_lights
+      - light.basement_desk_lights
+      - light.living_room_floor_lamp
+      - light.kitchen_table
+      - light.living_room_couch_lamp
+      - light.bedroom_light
+      - light.playroom_floor_lamp_2
+
+  - platform: group
+    name: First Floor Lights
+    entities:
+      - light.kitchen_table
+      - light.playroom_floor_lamp_2
+      - light.living_room_floor_lamp
+
+  - platform: group
+    name: Basement Lights
+    entities:
+      - light.basement_ceiling_lights
+      - light.basement_square_lamp_ht
+      - light.basement_desk_lights
+      - light.basement_couch_lamp
